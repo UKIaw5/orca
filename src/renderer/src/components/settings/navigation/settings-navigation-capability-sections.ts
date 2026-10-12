@@ -10,6 +10,7 @@ import { getMobileSettingsPaneSearchEntries } from '@/components/settings/mobile
 import { getOrcaAccountSettingsSearchEntries } from '@/components/settings/accounts/orca/orca-account-settings-search'
 import { OrcaLogoSettingsIcon } from '@/components/settings/page/orca-logo-settings-icon'
 import { getOrchestrationPaneSearchEntries } from '@/components/settings/orchestration/orchestration-search'
+import { getTranslationPaneSearchEntries } from '@/components/settings/translation-pane-search'
 import { getVoicePaneSearchEntries } from '@/components/settings/voice/voice-pane-search'
 import { getWorkspaceCleanupSettingsSearchEntries } from '@/components/settings/workspace-cleanup/workspace-cleanup-settings-search'
 import { translate } from '@/i18n/i18n'
@@ -22,6 +23,7 @@ import {
   CircleUserRound,
   Mic,
   MousePointerClick,
+  Languages,
   Network,
   Plug,
   SlidersHorizontal,
@@ -137,6 +139,17 @@ export function buildCapabilitySettingsSections(
             ),
             icon: Mic,
             searchEntries: getVoicePaneSearchEntries(),
+            group: 'capabilities'
+          },
+          {
+            id: 'translation',
+            title: translate('translation.settings.title', 'Translation'),
+            description: translate(
+              'translation.settings.description',
+              'Translate selected text into Japanese.'
+            ),
+            icon: Languages,
+            searchEntries: getTranslationPaneSearchEntries(),
             group: 'capabilities'
           }
         ]
