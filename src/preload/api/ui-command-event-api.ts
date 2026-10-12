@@ -141,6 +141,7 @@ export type UiCommandEventApi = {
   onCtrlTabKeyUp: (callback: () => void) => () => void
   onToggleStatusBar: (callback: () => void) => () => void
   onDictationKeyDown: (callback: () => void) => () => void
+  onTranslateSelection: (callback: () => void) => () => void
   onExportPdfRequested: (callback: () => void) => () => void
   onAppMenuPaste: (callback: () => void) => () => void
   onAppMenuSelectionAction: (callback: (action: 'copy' | 'select-all') => void) => () => void

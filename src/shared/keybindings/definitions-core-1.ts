@@ -171,6 +171,14 @@ export const KEYBINDING_DEFINITION_CORE_1: readonly KeybindingDefinition[] = [
     defaultBindings: platformBindings(['Mod+E'])
   },
   {
+    id: 'translate.selection',
+    title: 'Translate Selection',
+    group: 'Global',
+    scope: 'global',
+    searchKeywords: ['shortcut', 'translate', 'translation', 'selection', 'japanese'],
+    defaultBindings: platformBindings([])
+  },
+  {
     id: 'view.tasks',
     title: 'Open Tasks',
     group: 'Global',

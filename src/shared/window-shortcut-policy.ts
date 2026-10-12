@@ -47,6 +47,7 @@ export type WindowShortcutAction =
   | { type: 'jumpToTabIndex'; index: number }
   | { type: 'worktreeHistoryNavigate'; direction: 'back' | 'forward' }
   | { type: 'dictationKeyDown' }
+  | { type: 'translateSelection' }
 
 type WindowShortcutResolveOptions = KeybindingMatchOptions
 
@@ -166,6 +167,25 @@ export function nativeZoomCommandMatchesKeybindings(
   )
 }
 
+// First match wins, so order is the precedence.
+// Why: workspace.create is routed through main so it reaches the renderer even when focus lives in a contentEditable surface or a browser guest webContents, which bypass the renderer's window-level keydown.
+const SIMPLE_WINDOW_SHORTCUT_ACTIONS: [KeybindingActionId, WindowShortcutAction][] = [
+  ['app.settings', { type: 'openSettings' }],
+  ['app.forceReload', { type: 'forceReload' }],
+  ['worktree.palette', { type: 'toggleWorktreePalette' }],
+  ['sidebar.left.toggle', { type: 'toggleLeftSidebar' }],
+  ['sidebar.right.toggle', { type: 'toggleRightSidebar' }],
+  ['worktree.quickOpen', { type: 'openQuickOpen' }],
+  ['workspace.create', { type: 'openNewWorkspace' }],
+  ['workspace.delete', { type: 'deleteCurrentWorkspace' }],
+  ['workspace.openBoard', { type: 'openWorkspaceBoard' }],
+  ['voice.dictation', { type: 'dictationKeyDown' }],
+  ['translate.selection', { type: 'translateSelection' }],
+  ['view.tasks', { type: 'openTasks' }],
+  ['dashboard.toggle', { type: 'toggleAgentDashboard' }],
+  ['tab.previousRecent', { type: 'switchRecentTab' }]
+]
+
 export function resolveWindowShortcutAction(
   input: WindowShortcutInput,
   platform: NodeJS.Platform,
@@ -202,62 +222,10 @@ export function resolveWindowShortcutAction(
     return { type: 'zoom', direction: 'reset' }
   }
 
-  if (actionMatches('app.settings', input, platform, keybindings, options)) {
-    return { type: 'openSettings' }
-  }
-
-  if (actionMatches('app.forceReload', input, platform, keybindings, options)) {
-    return { type: 'forceReload' }
-  }
-
-  if (actionMatches('worktree.palette', input, platform, keybindings, options)) {
-    return { type: 'toggleWorktreePalette' }
-  }
-
-  if (actionMatches('sidebar.left.toggle', input, platform, keybindings, options)) {
-    return { type: 'toggleLeftSidebar' }
-  }
-
-  if (actionMatches('sidebar.right.toggle', input, platform, keybindings, options)) {
-    return { type: 'toggleRightSidebar' }
-  }
-
-  if (actionMatches('worktree.quickOpen', input, platform, keybindings, options)) {
-    return { type: 'openQuickOpen' }
-  }
-
-  // Why: Cmd/Ctrl+N opens the new-workspace composer. Routed through the
-  // main process so it reaches the renderer even when focus lives inside
-  // a contentEditable surface (markdown rich editor) or a browser guest
-  // webContents, both of which bypass the renderer's window-level keydown.
-  // Shift is accepted for compatibility with the former Create-from shortcut;
-  // the unified composer now exposes source switching inside the name field.
-  if (actionMatches('workspace.create', input, platform, keybindings, options)) {
-    return { type: 'openNewWorkspace' }
-  }
-
-  if (actionMatches('workspace.delete', input, platform, keybindings, options)) {
-    return { type: 'deleteCurrentWorkspace' }
-  }
-
-  if (actionMatches('workspace.openBoard', input, platform, keybindings, options)) {
-    return { type: 'openWorkspaceBoard' }
-  }
-
-  if (actionMatches('voice.dictation', input, platform, keybindings, options)) {
-    return { type: 'dictationKeyDown' }
-  }
-
-  if (actionMatches('view.tasks', input, platform, keybindings, options)) {
-    return { type: 'openTasks' }
-  }
-
-  if (actionMatches('dashboard.toggle', input, platform, keybindings, options)) {
-    return { type: 'toggleAgentDashboard' }
-  }
-
-  if (actionMatches('tab.previousRecent', input, platform, keybindings, options)) {
-    return { type: 'switchRecentTab' }
+  for (const [actionId, action] of SIMPLE_WINDOW_SHORTCUT_ACTIONS) {
+    if (actionMatches(actionId, input, platform, keybindings, options)) {
+      return action
+    }
   }
 
   // Why: the two ranges live in different scopes (no shared conflictGroup), so a
@@ -337,6 +305,8 @@ export function getWindowShortcutActionId(action: WindowShortcutAction): Keybind
       return action.direction === 'back' ? 'worktree.history.back' : 'worktree.history.forward'
     case 'dictationKeyDown':
       return 'voice.dictation'
+    case 'translateSelection':
+      return 'translate.selection'
     case 'jumpToWorktreeIndex':
       return 'workspace.selectByIndex'
     case 'jumpToTabIndex':

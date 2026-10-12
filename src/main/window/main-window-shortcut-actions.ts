@@ -11,6 +11,9 @@ export function sendResolvedWindowShortcutAction(
     case 'dictationKeyDown':
       mainWindow.webContents.send('ui:dictationKeyDown')
       return
+    case 'translateSelection':
+      mainWindow.webContents.send('ui:translateSelection')
+      return
     case 'zoom':
       mainWindow.webContents.send('terminal:zoom', action.direction)
       return
