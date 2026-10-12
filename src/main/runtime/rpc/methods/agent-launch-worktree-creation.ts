@@ -47,7 +47,8 @@ export function agentLaunchWorkspaceFactory(
       cwd,
       launchSource,
       paneKey,
-      options
+      options,
+      accountEnv
     }) => {
       const startupLaunchPreferences = toAgentLaunchPreferences(options)
       let promptRodeLaunchCommand = false
@@ -95,6 +96,7 @@ export function agentLaunchWorkspaceFactory(
           ...(launchSource ? { startupLaunchSource: launchSource } : {}),
           ...(paneKey ? { startupPaneKey: paneKey } : {}),
           ...(startupLaunchPreferences ? { startupLaunchPreferences } : {}),
+          ...(accountEnv ? { startupAccountEnv: { ...accountEnv } } : {}),
           // The launch owns the agent whichever surface it settles on, so the workspace records
           // it even when no startup terminal was created for it.
           createdWithAgent: agent,

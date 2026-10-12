@@ -26,6 +26,10 @@ import {
 import type { WslOrcadHostTarget } from './wsl-orcad-host-target'
 import { createWslOrcadHostTransport } from './wsl-orcad-host-transport'
 import {
+  registerWslOrcadHostEnvironment,
+  unregisterWslOrcadHostEnvironment
+} from './wsl-orcad-host-environments'
+import {
   listenWslOrcadStdioBridge,
   type WslOrcadStdioBridgeOptions
 } from './wsl-orcad-stdio-bridge'
@@ -131,7 +135,7 @@ export class WslOrcadConnectionManager {
     }
     this.active.delete(key)
     await entry.forward.close()
-    this.dependencies.onChange?.(entry.connection.distro, null)
+    this.publish(entry.connection, null)
   }
 
   async dispose(): Promise<void> {
@@ -185,7 +189,7 @@ export class WslOrcadConnectionManager {
     if (current) {
       this.active.delete(key)
       await current.forward.close()
-      this.dependencies.onChange?.(distro, null)
+      this.publish(current.connection, null)
     }
     const forward = await this.listen(transport, {
       environmentId,
@@ -225,7 +229,7 @@ export class WslOrcadConnectionManager {
         }
       }
       this.active.set(key, entry)
-      this.dependencies.onChange?.(distro, entry.connection)
+      this.publish(entry.connection, entry.connection)
       return entry.connection
     } catch (error) {
       await forward.close()
@@ -247,8 +251,17 @@ export class WslOrcadConnectionManager {
     }
     entry.connection = { ...entry.connection, pairingOffer, fullVersion: launch.fullVersion }
     this.active.set(key, entry)
-    this.dependencies.onChange?.(entry.connection.distro, entry.connection)
+    this.publish(entry.connection, entry.connection)
     return entry.connection
+  }
+
+  private publish(previous: WslOrcadConnection, next: WslOrcadConnection | null): void {
+    if (next) {
+      registerWslOrcadHostEnvironment(next.environmentId, next.distro)
+    } else {
+      unregisterWslOrcadHostEnvironment(previous.environmentId, previous.distro)
+    }
+    this.dependencies.onChange?.(previous.distro, next)
   }
 
   /** A persisted local port may be taken by now; a free one beats no connection. */
