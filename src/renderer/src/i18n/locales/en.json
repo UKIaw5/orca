@@ -19777,5 +19777,37 @@
     "browser": "Browser",
     "editor": "Editor",
     "terminal": "Terminal"
+  },
+  "translation": {
+    "menuLabel": "Translate Selection to Japanese",
+    "settings": {
+      "title": "Translation",
+      "description": "Translate selected text into Japanese.",
+      "searchTitle": "Translate Selection",
+      "searchDescription": "Translate selected English text into Japanese with Google Cloud Translation.",
+      "searchKeyword": {
+        "translate": "translate",
+        "translation": "translation",
+        "japanese": "japanese",
+        "google": "google",
+        "apiKey": "api key"
+      },
+      "saveFailed": "Failed to save the API key",
+      "clearFailed": "Failed to remove the API key",
+      "privacy": "Selected text is sent to Google Cloud Translation when you translate it. Nothing is sent until you run the shortcut or the context-menu item.",
+      "shortcut": "Shortcut: {{shortcut}} (change it in Shortcuts).",
+      "keyName": "Your Google Translate key",
+      "apiKey": "Google Cloud Translation API key",
+      "configured": "Configured",
+      "replacePlaceholder": "Enter a new key to replace it",
+      "keyPlaceholder": "AIza...",
+      "save": "Save Key",
+      "remove": "Remove API key",
+      "storage": "Stored in ~/.orca using Electron encrypted storage when available."
+    },
+    "noSelection": "Select some text to translate.",
+    "failed": "Translation failed.",
+    "pending": "Translating…",
+    "truncated": "Long selection: only the beginning was translated."
   }
 }

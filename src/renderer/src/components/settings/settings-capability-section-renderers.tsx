@@ -3,6 +3,7 @@ import { AgentsPane } from './AgentsPane'
 import { ComputerUsePane } from './ComputerUsePane'
 import { LinearAgentSkillPane } from './LinearAgentSkillPane'
 import { OrchestrationPane } from './OrchestrationPane'
+import { TranslationPane } from './TranslationPane'
 import { VoicePane } from './VoicePane'
 import { SettingsSection } from './SettingsSection'
 import { SettingsHostScopeUnavailableNotice } from './SettingsHostScopePicker'
@@ -137,6 +138,18 @@ export function renderDesktopCapabilitySettingsSections(
         {view.isSectionMounted('voice') ? (
           <VoicePane settings={model.settings} updateSettings={model.updateSettings} />
         ) : null}
+      </SettingsSection>
+
+      <SettingsSection
+        id="translation"
+        title={translate('translation.settings.title', 'Translation')}
+        description={translate(
+          'translation.settings.description',
+          'Translate selected text into Japanese.'
+        )}
+        searchEntries={navigation.getSectionSearchEntries('translation')}
+      >
+        {view.isSectionMounted('translation') ? <TranslationPane /> : null}
       </SettingsSection>
     </>
   ) : null

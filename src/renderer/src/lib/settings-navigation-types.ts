@@ -32,6 +32,7 @@ const SETTINGS_NAV_TARGETS = [
   'advanced',
   'dev',
   'voice',
+  'translation',
   'shortcuts',
   'stats',
   'ssh',
