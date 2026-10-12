@@ -3,6 +3,14 @@ import { createGoogleTranslateProvider } from './google-translate-provider'
 
 const LANGS = { from: 'en', to: 'ja' }
 
+function readSentQuery(init: RequestInit): string {
+  const body: unknown = JSON.parse(String(init.body))
+  if (typeof body === 'object' && body !== null && 'q' in body && typeof body.q === 'string') {
+    return body.q
+  }
+  throw new Error('request body has no q')
+}
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status })
 }
@@ -10,12 +18,12 @@ function jsonResponse(body: unknown, status = 200): Response {
 describe('createGoogleTranslateProvider', () => {
   it('sends protected html with header auth and restores identifiers', async () => {
     const fetchImpl = vi.fn(async (_url: string, init: RequestInit) => {
-      const sent = JSON.parse(String(init.body)) as { q: string }
+      const sentQuery = readSentQuery(init)
       // Fake MT: keeps no-translate spans, "translates" the prose around them.
       return jsonResponse({
         data: {
           translations: [
-            { translatedText: sent.q.replace('Call ', '呼び出し: ').replace(' first.', '。') }
+            { translatedText: sentQuery.replace('Call ', '呼び出し: ').replace(' first.', '。') }
           ]
         }
       })
@@ -56,9 +64,9 @@ describe('createGoogleTranslateProvider', () => {
       jsonResponse({ error: { message: 'API key not valid.' } }, 400)
     )
     const provider = createGoogleTranslateProvider({ readApiKey: () => 'SECRET', fetchImpl })
-    const error = await provider.translate('x', LANGS).catch((e: Error) => e)
-    expect((error as Error).message).toBe('Google Translate failed (400): API key not valid.')
-    expect((error as Error).message).not.toContain('SECRET')
+    await expect(provider.translate('x', LANGS)).rejects.toMatchObject({
+      message: 'Google Translate failed (400): API key not valid.'
+    })
   })
 
   it('reports network failures without leaking the cause', async () => {

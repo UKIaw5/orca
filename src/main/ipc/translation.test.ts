@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { handlers, keyStore, fetchMock } = vi.hoisted(() => ({
-  handlers: new Map<string, (event: unknown, ...args: unknown[]) => unknown>(),
-  keyStore: { key: null as string | null },
-  fetchMock: vi.fn()
-}))
+const { handlers, keyStore, fetchMock } = vi.hoisted(() => {
+  const keyStore: { key: string | null } = { key: null }
+  return {
+    handlers: new Map<string, (event: unknown, ...args: unknown[]) => unknown>(),
+    keyStore,
+    fetchMock: vi.fn()
+  }
+})
 
 vi.mock('electron', () => ({
   ipcMain: {
