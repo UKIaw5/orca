@@ -5,6 +5,7 @@ import { AgentDefaultSurfaceSection } from '../agents/surfaces/AgentDefaultSurfa
 import { ComputerUsePane } from '../computer-use/ComputerUsePane'
 import { LinearAgentSkillPane } from '../skills/linear/LinearAgentSkillPane'
 import { OrchestrationPane } from '../orchestration/OrchestrationPane'
+import { TranslationPane } from '../TranslationPane'
 import { VoicePane } from '../voice/VoicePane'
 import { SettingsSection } from '../section-layout/SettingsSection'
 import { SettingsHostScopeUnavailableNotice } from '../host-scope/SettingsHostScopePicker'
@@ -184,6 +185,18 @@ export function renderDesktopCapabilitySettingsSections(
             writeSourceControlAiSettings={context.interactions.writeSourceControlAiSettingsOrThrow}
           />
         ) : null}
+      </SettingsSection>
+
+      <SettingsSection
+        id="translation"
+        title={translate('translation.settings.title', 'Translation')}
+        description={translate(
+          'translation.settings.description',
+          'Translate selected text into Japanese.'
+        )}
+        searchEntries={navigation.getSectionSearchEntries('translation')}
+      >
+        {view.isSectionMounted('translation') ? <TranslationPane /> : null}
       </SettingsSection>
     </>
   ) : null
