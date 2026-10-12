@@ -57,6 +57,7 @@ import type { KeybindingsApi, SettingsApi } from './api/settings-api'
 import type { ShellApi } from './api/shell-api'
 import type { SpeechApi } from './api/speech-api'
 import type { SshApi } from './api/ssh-api'
+import type { TranslationApi } from './api/translation-api'
 import type { DiagnosticsApi, MemoryApi, StatsApi, TelemetryApi } from './api/telemetry-api'
 import type { UiCommandEventApi } from './api/ui-command-event-api'
 import type { UiWindowApi } from './api/ui-window-api'
@@ -159,6 +160,7 @@ export type PreloadApi = {
   agentStatus: AgentStatusApi
   mobile: MobileApi
   speech: SpeechApi
+  translation: TranslationApi
 }
 
 export type {
