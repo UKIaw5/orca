@@ -15,6 +15,7 @@ import {
   type MonacoMarkdownSelectionAnnotationTarget
 } from './monaco-markdown-selection-annotation'
 import { handleMonacoLargeTextPaste } from './monaco-large-text-paste'
+import { installMonacoTranslateSelection } from './monaco-translate-selection'
 import type { MarkdownCommentPopoverState } from './use-monaco-markdown-annotations'
 import type { MonacoEditorPropsRef } from './monaco-editor-mount-params'
 
@@ -102,6 +103,7 @@ export function installMonacoEditorInputBindings(params: MonacoEditorInputBindin
       state.showRightSidebarSearch({ query })
     }
   })
+  const translateSelection = installMonacoTranslateSelection(editorInstance)
   const onLargeTextPaste = (event: ClipboardEvent): void => {
     handleMonacoLargeTextPaste(editorInstance, event, {
       readOnly: readOnlyRef.current,
@@ -135,6 +137,7 @@ export function installMonacoEditorInputBindings(params: MonacoEditorInputBindin
       cleanupAddReviewNoteShortcut()
       editorDomNode.removeEventListener('paste', onLargeTextPaste, { capture: true })
       searchInFilesAction.dispose()
+      translateSelection.dispose()
     }
   }
 }
