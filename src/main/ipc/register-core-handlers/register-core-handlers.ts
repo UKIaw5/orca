@@ -64,6 +64,7 @@ import { registerEmulatorVideoStreamHandlers } from '../emulator/emulator-video-
 import { registerEmulatorScrcpyTouchHandler } from '../emulator/emulator-scrcpy-touch'
 import { registerEmulatorScrcpyKeyboardHandler } from '../emulator/emulator-scrcpy-keyboard'
 import { registerSpeechHandlers } from '../speech'
+import { registerTranslationHandlers } from '../translation'
 import { registerTerminalRenderDesyncEvidenceHandler } from '../terminal-views/terminal-render-desync-evidence'
 import { registerOrcaProfileHandlers } from '../profiles/orca-profiles'
 import { registerCodexAccountHandlers } from '../accounts/codex-accounts'
@@ -282,6 +283,7 @@ export async function registerCoreHandlers(
     })
     registerUpdaterHandlers()
     registerSpeechHandlers(store, commitMessageAgentEnv)
+    registerTranslationHandlers()
     void hostsReady.catch((error: unknown) =>
       console.warn('[startup] Host initialization failed:', error)
     )
