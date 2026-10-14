@@ -1,12 +1,12 @@
 import { translate } from '@/i18n/i18n'
-import { createToastResultSink, type TranslationResultSink } from './translation-result-sink'
+import { createPopupResultSink, type TranslationResultSink } from './translation-result-sink'
 import { readActiveTranslationSelection } from './translation-selection-source'
 
 type TranslateText = (text: string) => ReturnType<typeof window.api.translation.translate>
 
 export async function translateSelectedText(
   text: string,
-  sink: TranslationResultSink = createToastResultSink(),
+  sink: TranslationResultSink = createPopupResultSink(),
   translateText: TranslateText = (value) => window.api.translation.translate(value)
 ): Promise<void> {
   const source = text.trim()

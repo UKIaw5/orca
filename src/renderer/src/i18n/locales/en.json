@@ -19808,6 +19808,7 @@
     "noSelection": "Select some text to translate.",
     "failed": "Translation failed.",
     "pending": "Translating…",
-    "truncated": "Long selection: only the beginning was translated."
+    "truncated": "Long selection: only the beginning was translated.",
+    "copy": "Copy"
   }
 }

@@ -1,5 +1,6 @@
 import { toast } from 'sonner'
 import { translate } from '@/i18n/i18n'
+import { currentTranslationAnchor, showTranslationPopupState } from './translation-popup-store'
 
 export type TranslationResultSink = {
   showPending: (source: string) => void
@@ -30,5 +31,16 @@ export function createToastResultSink(): TranslationResultSink {
     showError: (message) => {
       toast.error(message, { id })
     }
+  }
+}
+
+// Popup anchored where the user last pointed; replaced in place by each run.
+export function createPopupResultSink(): TranslationResultSink {
+  const anchor = currentTranslationAnchor()
+  return {
+    showPending: () => showTranslationPopupState({ status: 'pending', anchor }),
+    showResult: ({ source, translated, truncated }) =>
+      showTranslationPopupState({ status: 'result', anchor, source, translated, truncated }),
+    showError: (message) => showTranslationPopupState({ status: 'error', anchor, message })
   }
 }

@@ -8,6 +8,7 @@ import { CrashReportDialog } from '../components/crash-report/CrashReportDialog'
 import { MarkdownTemplatePicker } from '../components/editor/MarkdownTemplatePicker'
 import RecentTabSwitcher from '../components/tab-bar/RecentTabSwitcher'
 import { TranslateSelectionShortcut } from '../components/translation/TranslateSelectionShortcut'
+import { TranslationPopup } from '../components/translation/TranslationPopup'
 import { SkillFreshnessUpdateDialog } from '../components/skills/SkillFreshnessUpdateDialog'
 import { StarNagCard } from '../components/StarNagCard'
 import { NativeChatResumeOnRestartModal } from '../components/NativeChatResumeOnRestartModal'
@@ -374,6 +375,7 @@ export function AppRootSurfaces(props: {
         </Suspense>
       ) : null}
       <TranslateSelectionShortcut />
+      <TranslationPopup />
       <OverlayBoundary boundaryId="overlay.recent-tab-switcher" resetKey={activeView}>
         <RecentTabSwitcher />
       </OverlayBoundary>
