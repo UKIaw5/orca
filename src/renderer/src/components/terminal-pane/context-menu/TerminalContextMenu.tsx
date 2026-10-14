@@ -42,6 +42,7 @@ import { TerminalQuickCommandsSubmenu } from '../quick-commands/TerminalQuickCom
 import { AddToChatSubmenu } from '../../native-chat/selection-quotes/AddToChatMenu'
 import type { TerminalPaneAgentIdCopy } from './terminal-pane-context-menu-types'
 import { CopyOrcaIdMenuItem } from '../../native-chat/pane/actions/NativeChatCopyOrcaSessionIdMenuItem'
+import { TerminalTranslateMenuItem } from '../TerminalTranslateMenuItem'
 
 type TerminalContextMenuProps = {
   open: boolean
@@ -239,6 +240,7 @@ function TerminalContextMenuItems({
         {t('auto.components.terminal.pane.TerminalContextMenu.0a917b591a', 'Paste')}
         <DropdownMenuShortcut>{shortcuts.paste}</DropdownMenuShortcut>
       </DropdownMenuItem>
+      <TerminalTranslateMenuItem />
       <TerminalQuickCommandsSubmenu
         hosts={quickCommandHosts}
         hostLoadFailed={quickCommandHostLoadFailed}
