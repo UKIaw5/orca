@@ -1,6 +1,8 @@
 import type { Editor } from '@tiptap/react'
 import { TextSelection } from '@tiptap/pm/state'
 import type { RichMarkdownContextMenuCommandPayload } from '../../../../shared/rich-markdown-context-menu'
+import { translateSelectedText } from '../translation/translate-selection'
+import { readRichMarkdownSelectionText } from './rich-markdown-translate-selection'
 import {
   runRichMarkdownTableAction,
   type RichMarkdownTableAction
@@ -102,6 +104,9 @@ export function runRichMarkdownContextCommand({
       return
     case 'divider':
       editor.chain().focus().setHorizontalRule().run()
+      return
+    case 'translate-selection':
+      void translateSelectedText(readRichMarkdownSelectionText(editor))
       return
     case 'insert-row-above':
     case 'insert-row-below':

@@ -25,6 +25,7 @@ import {
   isRichMarkdownTableContextCommand,
   runRichMarkdownContextCommand
 } from './rich-markdown-context-command-routing'
+import { installRichMarkdownTranslateSelection } from './rich-markdown-translate-selection'
 import { useRichMarkdownSpellcheckAttribute } from './rich-markdown-spellcheck'
 import { useRichMarkdownPendingFocus } from './useRichMarkdownPendingFocus'
 import { useRichMarkdownSuperscriptLinkSetup } from './useRichMarkdownSuperscriptLinkSetup'
@@ -342,6 +343,8 @@ export default function RichMarkdownEditor({
       })
     })
   }, [handleLocalImagePick, toggleLinkFromToolbar])
+
+  useEffect(() => (editor ? installRichMarkdownTranslateSelection(editor) : undefined), [editor])
 
   const { openSearch, searchState, searchActions } = useRichMarkdownSearch({
     editor,

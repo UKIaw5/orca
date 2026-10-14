@@ -19,6 +19,7 @@ import { installHttpLinkClickFallback } from './terminal-url-link-hit-testing'
 import { handleOscLink } from './terminal-osc-link-routing'
 import { copyTerminalSelection } from './terminal-selection-copy'
 import { readTerminalClipboardSelection } from './terminal-clipboard-selection-text'
+import { installTerminalTranslateSelection } from './terminal-translate-selection'
 import { installTerminalNativeCopyGutterTrim } from './terminal-native-copy-gutter'
 import { installMouseHideWhileTyping } from './mouse-hide-while-typing'
 import { isPrimarySelectionEnabled, setPrimarySelectionText } from '@/lib/primary-selection'
@@ -116,6 +117,7 @@ export function installTerminalPaneLinkHandling(context: PaneLinkContext): void 
   )
   seedStartupSessionRestoredBanner(ptyStartup, pane.id, onShowSessionRestoredBanner)
 
+  installTerminalTranslateSelection(pane.terminal, pane.container)
   refs.nativeCopyDisposablesRef.current.set(
     pane.id,
     installTerminalNativeCopyGutterTrim(pane.terminal)
