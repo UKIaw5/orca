@@ -24,6 +24,7 @@ export type RichMarkdownContextMenuCommand =
   | 'insert-column-right'
   | 'delete-column'
   | 'delete-table'
+  | 'translate-selection'
 
 export type RichMarkdownContextMenuCommandPayload = {
   command: RichMarkdownContextMenuCommand
