@@ -35,6 +35,7 @@ import { isMacPlatform, nativeChatToggleShortcutLabel } from '../native-chat/nat
 import { AgentSessionContinuationMenuItem } from './AgentSessionContinuationMenuItem'
 import type { TerminalQuickCommandMenuHost } from '@/hooks/use-terminal-quick-command-hosts'
 import { TerminalQuickCommandsSubmenu } from './TerminalQuickCommandsSubmenu'
+import { TerminalTranslateMenuItem } from './TerminalTranslateMenuItem'
 
 type TerminalContextMenuProps = {
   open: boolean
@@ -206,6 +207,7 @@ function TerminalContextMenuItems({
         {translate('auto.components.terminal.pane.TerminalContextMenu.0a917b591a', 'Paste')}
         <DropdownMenuShortcut>{shortcuts.paste}</DropdownMenuShortcut>
       </DropdownMenuItem>
+      <TerminalTranslateMenuItem />
       <TerminalQuickCommandsSubmenu
         hosts={quickCommandHosts}
         hostLoadFailed={quickCommandHostLoadFailed}
