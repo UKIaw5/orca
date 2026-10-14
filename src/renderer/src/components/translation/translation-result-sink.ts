@@ -17,7 +17,8 @@ export function createToastResultSink(): TranslationResultSink {
       toast.loading(translate('translation.pending', 'Translating…'), { id })
     },
     showResult: ({ translated, truncated }) => {
-      toast(translated, {
+      // Why success, not a bare toast: updating a loading toast without a type keeps its spinner.
+      toast.success(translated, {
         id,
         duration: RESULT_TOAST_DURATION_MS,
         closeButton: true,
