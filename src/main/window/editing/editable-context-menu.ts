@@ -8,9 +8,19 @@ import type { ContextMenuSpelling } from '../../../shared/browser/guest-lifecycl
 import { translateMain } from '../../i18n/main-i18n'
 import { editableContextMenuLabels } from './editable-context-menu-labels'
 
-type EditableContextMenuWebContents = Pick<
-  Electron.WebContents,
-  'replaceMisspelling' | 'send' | 'session'
+type EditableContextMenuWebContents = Pick<Electron.WebContents, 'replaceMisspelling' | 'send'> & {
+  session: Pick<Electron.Session, 'addWordToSpellCheckerDictionary'>
+}
+
+type EditableContextMenuParams = Pick<
+  Electron.ContextMenuParams,
+  | 'dictionarySuggestions'
+  | 'formControlType'
+  | 'isEditable'
+  | 'misspelledWord'
+  | 'selectionText'
+  | 'x'
+  | 'y'
 >
 
 function markdownCommandItem(
@@ -52,10 +62,22 @@ function editableContextPasteItem(
 function buildMarkdownMenuTemplate(
   webContents: EditableContextMenuWebContents,
   point: { x: number; y: number },
-  tableTarget: RichMarkdownContextMenuTableTarget | null
+  tableTarget: RichMarkdownContextMenuTableTarget | null,
+  hasSelection: boolean
 ): Electron.MenuItemConstructorOptions[] {
   const labels = editableContextMenuLabels()
   return [
+    ...(hasSelection
+      ? [
+          markdownCommandItem(
+            translateMain('translation.menuLabel', 'Translate Selection to Japanese'),
+            'translate-selection',
+            webContents,
+            point
+          ),
+          { type: 'separator' as const }
+        ]
+      : []),
     markdownCommandItem(labels.addLink, 'add-link', webContents, point),
     { type: 'separator' },
     {
@@ -208,7 +230,7 @@ export function readContextMenuSpelling(
 }
 
 export function buildEditableContextMenuTemplate(
-  params: Electron.ContextMenuParams,
+  params: EditableContextMenuParams,
   webContents: EditableContextMenuWebContents,
   options?: { tableTarget?: RichMarkdownContextMenuTableTarget | null; plainText?: boolean }
 ): Electron.MenuItemConstructorOptions[] {
@@ -243,7 +265,8 @@ export function buildEditableContextMenuTemplate(
       ? buildMarkdownMenuTemplate(
           webContents,
           { x: params.x, y: params.y },
-          options?.tableTarget ?? null
+          options?.tableTarget ?? null,
+          params.selectionText.trim().length > 0
         )
       : buildNativeEditMenuTemplate(params, webContents))
   )
@@ -278,7 +301,7 @@ export function parseRichMarkdownContextMenuTableTarget(
 }
 
 export function matchingRichMarkdownContextMenuTableTarget(
-  params: Electron.ContextMenuParams,
+  params: EditableContextMenuParams,
   target: RichMarkdownContextMenuTableTarget | null
 ): RichMarkdownContextMenuTableTarget | null {
   if (
