@@ -35,9 +35,19 @@ export function createGoogleTranslateProvider({
   return {
     id: 'google-v2',
     async translate(text, { from, to }) {
-      const apiKey = readApiKey()
+      let apiKey: string | null
+      try {
+        apiKey = readApiKey()
+      } catch {
+        // Why: a key sealed by another profile or machine can't be decrypted here; only re-entering it fixes that.
+        throw new Error(
+          'Google Translate API key could not be read. Re-enter it in Settings → Translation.'
+        )
+      }
       if (!apiKey) {
-        throw new Error('Google Translate API key is not configured')
+        throw new Error(
+          'Google Translate API key is not configured. Add it in Settings → Translation.'
+        )
       }
       let response: Response
       try {
