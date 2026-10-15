@@ -14,9 +14,9 @@ export function TranslationPopup(): React.JSX.Element | null {
   const state = useSyncExternalStore(subscribeTranslationPopup, getTranslationPopupState)
 
   useEffect(() => {
-    // Why: a click on Monaco's menu item would otherwise replace the right-click point beside the selection.
+    // Why: a click on a context-menu item would otherwise replace the right-click point beside the selection.
     const remember = (event: PointerEvent | MouseEvent): void => {
-      if (event.target instanceof Element && event.target.closest('.monaco-menu')) {
+      if (event.target instanceof Element && event.target.closest('.monaco-menu, [role="menu"]')) {
         return
       }
       rememberTranslationAnchor({ x: event.clientX, y: event.clientY })
