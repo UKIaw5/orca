@@ -4,6 +4,8 @@ import { toast } from 'sonner'
 import { translate } from '@/i18n/i18n'
 import { useShortcutLabel } from '@/hooks/useShortcutLabel'
 import type { TranslationKeyStatus } from '../../../../shared/translation/translation-ipc-types'
+import { useAppStore } from '../../store'
+import { isWindowsUserAgent } from '../terminal-pane/pane-helpers'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -11,6 +13,9 @@ import { UnsealedCredentialNotice } from './UnsealedCredentialNotice'
 
 export function TranslationPane(): React.JSX.Element {
   const shortcutLabel = useShortcutLabel('translate.selection')
+  const rightClickPastes = useAppStore(
+    (store) => store.settings?.terminalRightClickToPaste ?? isWindowsUserAgent()
+  )
   const [status, setStatus] = useState<TranslationKeyStatus | null>(null)
   const [draft, setDraft] = useState('')
   const [pending, setPending] = useState(false)
@@ -80,6 +85,14 @@ export function TranslationPane(): React.JSX.Element {
           }
         )}
       </p>
+      {rightClickPastes ? (
+        <p className="text-xs text-muted-foreground">
+          {translate(
+            'translation.settings.terminalMenuHint',
+            'In terminals, right-click copies or pastes. Ctrl+right-click opens the menu that has Translate.'
+          )}
+        </p>
+      ) : null}
       <UnsealedCredentialNotice
         protection={status?.protection ?? null}
         credentialName={translate('translation.settings.keyName', 'Your Google Translate key')}
