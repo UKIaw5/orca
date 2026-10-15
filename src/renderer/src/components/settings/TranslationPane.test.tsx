@@ -8,6 +8,11 @@ vi.mock('@/i18n/i18n', () => ({
     fallback.replace(/\{\{(\w+)\}\}/g, (_match, name: string) => params?.[name] ?? '')
 }))
 vi.mock('@/hooks/useShortcutLabel', () => ({ useShortcutLabel: () => 'Unassigned' }))
+type StoreState = { settings: { terminalRightClickToPaste?: boolean } | null }
+const storeState: StoreState = { settings: null }
+vi.mock('../../store', () => ({
+  useAppStore: (select: (state: StoreState) => unknown) => select(storeState)
+}))
 vi.mock('sonner', () => ({ toast: { error: vi.fn() } }))
 
 const api = {
@@ -25,6 +30,7 @@ describe('TranslationPane', () => {
     api.getApiKeyStatus.mockResolvedValue({ configured: false, protection: null })
   })
   afterEach(() => {
+    storeState.settings = null
     cleanup()
     vi.clearAllMocks()
   })
@@ -58,5 +64,18 @@ describe('TranslationPane', () => {
     api.getApiKeyStatus.mockResolvedValue({ configured: true, protection: 'plaintext' })
     render(<TranslationPane />)
     expect((await screen.findByRole('alert')).textContent).toContain('Your Google Translate key')
+  })
+
+  it('explains how to reach the terminal menu when right-click pastes', async () => {
+    storeState.settings = { terminalRightClickToPaste: true }
+    render(<TranslationPane />)
+    expect(await screen.findByText(/Ctrl\+right-click opens the menu/)).toBeTruthy()
+  })
+
+  it('omits the terminal menu hint when right-click opens the menu', async () => {
+    storeState.settings = { terminalRightClickToPaste: false }
+    render(<TranslationPane />)
+    await screen.findByText(/sent to Google Cloud Translation/)
+    expect(screen.queryByText(/Ctrl\+right-click/)).toBeNull()
   })
 })
