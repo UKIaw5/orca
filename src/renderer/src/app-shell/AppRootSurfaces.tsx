@@ -13,6 +13,7 @@ import { MarkdownTemplatePicker } from '../components/editor/markdown/documents/
 import RecentTabSwitcher from '../components/tab-bar/recent-switcher/RecentTabSwitcher'
 import { SkillFreshnessUpdateDialog } from '../components/skills/freshness/SkillFreshnessUpdateDialog'
 import { TranslateSelectionShortcut } from '../components/translation/TranslateSelectionShortcut'
+import { DomSelectionTranslateMenu } from '../components/translation/DomSelectionTranslateMenu'
 import { TranslationPopup } from '../components/translation/TranslationPopup'
 import { StarNagAgentValueMomentObserver } from '../components/star-nag/StarNagAgentValueMomentObserver'
 import { NativeChatResumeToasts } from '../components/native-chat-recovery/toast/NativeChatResumeToastHost'
@@ -393,6 +394,7 @@ export const AppRootSurfaces = memo(function AppRootSurfaces(props: {
       ) : null}
       <TranslateSelectionShortcut />
       <TranslationPopup />
+      <DomSelectionTranslateMenu />
       <OverlayBoundary boundaryId="overlay.recent-tab-switcher" resetKey={activeView}>
         <RecentTabSwitcher />
       </OverlayBoundary>
