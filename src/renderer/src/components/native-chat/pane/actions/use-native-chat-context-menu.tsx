@@ -12,7 +12,7 @@ import {
   nativeChatSelectionText
 } from '../../../../../../shared/native-chat/input/quotes/native-chat-quote-selection'
 import { readNativeChatTranscriptSelection } from '../../selection-quotes/native-chat-transcript-selection'
-import { Clipboard, Copy, Image as ImageIcon, SquareTerminal } from 'lucide-react'
+import { Clipboard, Copy, Image as ImageIcon, Languages, SquareTerminal } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useTranslate } from '@/i18n/use-translate'
+import { translateSelectedText } from '@/components/translation/translate-selection'
 import {
   copyNativeChatImage,
   readNativeChatCopyImage,
@@ -292,6 +293,12 @@ export function useNativeChatContextMenu({
               <Copy />
               {t('auto.components.nativeChat.contextMenu.copy', 'Copy')}
               <DropdownMenuShortcut>{isMacPlatform() ? '⌘C' : 'Ctrl+C'}</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          ) : null}
+          {hasSelection ? (
+            <DropdownMenuItem onSelect={() => void translateSelectedText(state.selectedText)}>
+              <Languages />
+              {t('translation.menuLabel', 'Translate Selection to Japanese')}
             </DropdownMenuItem>
           ) : null}
           <NativeChatContextMenuTargetItems

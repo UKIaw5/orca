@@ -48,6 +48,12 @@ export function TranslationPopup(): React.JSX.Element | null {
         // Why: keep focus in the editor/terminal so the selection stays and typing continues.
         onOpenAutoFocus={(event) => event.preventDefault()}
         onCloseAutoFocus={(event) => event.preventDefault()}
+        // Why: the context menu that started the run hands focus back as it closes; that must not dismiss the result.
+        onFocusOutside={(event) => {
+          if (event.target instanceof Element && event.target.closest('[role="menu"]')) {
+            event.preventDefault()
+          }
+        }}
       >
         <div className="space-y-2 p-3 text-sm">
           {state.status === 'pending' && (
