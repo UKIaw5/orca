@@ -2,6 +2,7 @@ import { NO_RESOURCE_EVIDENCE } from '@/lib/workspace/ownership/workspace-copy-o
 import { useDiffCommentView } from '../../../diff-comments/use-diff-comment-owner'
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { DiffEditor, type DiffOnMount } from '@monaco-editor/react'
+import { installDiffEditorTranslateSelection } from '../../monaco-translate-selection'
 import type { IDisposable, editor } from 'monaco-editor'
 import { useAppStore } from '@/store/index'
 import {
@@ -286,6 +287,8 @@ export default function DiffViewer({
       // Before the content listener attaches, so reconciling never reads as a user edit.
       syncKeptDiffModelsOnMount(diffEditor, propsRef)
 
+      const cleanupTranslate = installDiffEditorTranslateSelection(diffEditor)
+      modifiedEditor.onDidDispose(cleanupTranslate)
       setupCopy(originalEditor, monaco, filePath, propsRef)
       setupCopy(modifiedEditor, monaco, filePath, propsRef)
       setModifiedEditor(modifiedEditor)
