@@ -43,6 +43,7 @@ vi.mock('lucide-react', () => {
     Copy: Icon,
     GitFork: Icon,
     Image: Icon,
+    Languages: Icon,
     Maximize2: Icon,
     MessageSquarePlus: Icon,
     Minimize2: Icon,
@@ -78,6 +79,9 @@ vi.mock('@/lib/image-blob-png', async (importOriginal) => ({
   ...(await importOriginal<typeof ImageBlobPng>()),
   convertImageBlobToPng: imageCopy.convertImageBlobToPng
 }))
+
+const translation = vi.hoisted(() => ({ translateSelectedText: vi.fn() }))
+vi.mock('../translation/translate-selection', () => translation)
 
 vi.mock('./NativeChatSelectionQuote', () => ({ NativeChatSelectionQuote: () => null }))
 
@@ -163,6 +167,12 @@ function copyTextItem(): ItemProps | undefined {
   )
 }
 
+function translateItem(): ItemProps | undefined {
+  return items.list.findLast(
+    (candidate) => childrenText(candidate.children) === 'Translate Selection to Japanese'
+  )
+}
+
 function pasteItem(): ItemProps | undefined {
   return items.list.findLast((candidate) => childrenText(candidate.children) === 'Paste')
 }
@@ -232,6 +242,19 @@ describe('useNativeChatContextMenu', () => {
     fireEvent.contextMenu(screen.getByText('text'))
 
     expect(copyTextItem()).toBeUndefined()
+  })
+
+  it('translates the selected chat text, and is absent without a selection', () => {
+    render(<ImageHarness />)
+    fireEvent.contextMenu(screen.getByText('text'))
+    expect(translateItem()).toBeUndefined()
+
+    items.list = []
+    window.getSelection()?.selectAllChildren(screen.getByText('text'))
+    fireEvent.contextMenu(screen.getByText('text'))
+    translateItem()?.onSelect?.()
+
+    expect(translation.translateSelectedText).toHaveBeenCalledWith('text')
   })
 
   it('offers Paste in a text field but not on the transcript', () => {

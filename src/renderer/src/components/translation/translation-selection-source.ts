@@ -1,3 +1,5 @@
+import { readDomSelectionText } from './translation-dom-selection'
+
 export type TranslationSelectionSource = { readSelection: () => string }
 
 let activeSource: TranslationSelectionSource | null = null
@@ -14,6 +16,7 @@ export function registerActiveTranslationSelectionSource(
   }
 }
 
+// Falls back to the page selection so read-only DOM surfaces work with the shortcut without registering.
 export function readActiveTranslationSelection(): string {
-  return activeSource?.readSelection() ?? ''
+  return activeSource ? activeSource.readSelection() : readDomSelectionText()
 }

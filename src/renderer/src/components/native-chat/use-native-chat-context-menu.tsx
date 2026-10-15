@@ -12,6 +12,7 @@ import {
   Copy,
   GitFork,
   Image as ImageIcon,
+  Languages,
   Maximize2,
   MessageSquarePlus,
   Minimize2,
@@ -31,6 +32,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { translate } from '@/i18n/i18n'
+import { translateSelectedText } from '../translation/translate-selection'
 import {
   copyNativeChatImage,
   readNativeChatCopyImage,
@@ -227,6 +229,12 @@ export function useNativeChatContextMenu({
               <Copy />
               {translate('auto.components.nativeChat.contextMenu.copy', 'Copy')}
               <DropdownMenuShortcut>{isMacPlatform() ? '⌘C' : 'Ctrl+C'}</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          ) : null}
+          {hasSelection ? (
+            <DropdownMenuItem onSelect={() => void translateSelectedText(state.selectedText)}>
+              <Languages />
+              {translate('translation.menuLabel', 'Translate Selection to Japanese')}
             </DropdownMenuItem>
           ) : null}
           {state.canPaste ? (
