@@ -19796,6 +19796,7 @@
       "clearFailed": "Failed to remove the API key",
       "privacy": "Selected text is sent to Google Cloud Translation when you translate it. Nothing is sent until you run the shortcut or the context-menu item.",
       "shortcut": "Shortcut: {{shortcut}} (change it in Shortcuts).",
+      "terminalMenuHint": "In terminals, right-click copies or pastes. Ctrl+right-click opens the menu that has Translate.",
       "keyName": "Your Google Translate key",
       "apiKey": "Google Cloud Translation API key",
       "configured": "Configured",
