@@ -59,6 +59,16 @@ describe('createGoogleTranslateProvider', () => {
     expect(fetchImpl).not.toHaveBeenCalled()
   })
 
+  it('tells the user to re-enter a key that cannot be decrypted', async () => {
+    const fetchImpl = vi.fn()
+    const readApiKey = (): string => {
+      throw new Error('Google Translate API key could not be decrypted')
+    }
+    const provider = createGoogleTranslateProvider({ readApiKey, fetchImpl })
+    await expect(provider.translate('x', LANGS)).rejects.toThrow('Re-enter it in Settings')
+    expect(fetchImpl).not.toHaveBeenCalled()
+  })
+
   it('surfaces the API error message without the key', async () => {
     const fetchImpl = vi.fn(async () =>
       jsonResponse({ error: { message: 'API key not valid.' } }, 400)

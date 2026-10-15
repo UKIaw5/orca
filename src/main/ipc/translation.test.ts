@@ -66,7 +66,7 @@ describe('translation IPC handlers', () => {
   it('returns an error result instead of throwing when no key is set', async () => {
     expect(await invoke('translation:translate', 'hello')).toEqual({
       ok: false,
-      error: 'Google Translate API key is not configured'
+      error: 'Google Translate API key is not configured. Add it in Settings → Translation.'
     })
     expect(fetchMock).not.toHaveBeenCalled()
   })
