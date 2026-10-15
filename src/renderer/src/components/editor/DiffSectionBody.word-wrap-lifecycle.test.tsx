@@ -30,6 +30,10 @@ const { mountedEditors, syncWordWrap, cleanupShiftWheel, createEditor } = vi.hoi
   }
 })
 
+vi.mock('./monaco-translate-selection', () => ({
+  installDiffEditorTranslateSelection: () => () => {}
+}))
+
 vi.mock('@monaco-editor/react', () => ({
   DiffEditor: ({
     onMount
