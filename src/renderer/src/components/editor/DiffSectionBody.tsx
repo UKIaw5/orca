@@ -3,6 +3,7 @@ import type { editor } from 'monaco-editor'
 import { lazyWithRetry as lazy } from '@/lib/lazy-with-retry'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import { DiffEditor, type DiffOnMount } from '@monaco-editor/react'
+import { installDiffEditorTranslateSelection } from './monaco-translate-selection'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { combinedDiffSectionScrollbarOptions } from './diff-editor-scrollbar-options'
@@ -73,8 +74,10 @@ export function DiffSectionBody({
   const handleEditorMount: DiffOnMount = (diffEditor, monaco) => {
     diffEditorRef.current = diffEditor
     const cleanupShiftWheelScroll = installDiffEditorShiftWheelScroll(diffEditor)
+    const cleanupTranslate = installDiffEditorTranslateSelection(diffEditor)
     diffEditor.getModifiedEditor().onDidDispose(() => {
       cleanupShiftWheelScroll()
+      cleanupTranslate()
       if (diffEditorRef.current !== diffEditor) {
         return
       }

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { DiffEditor, type DiffOnMount } from '@monaco-editor/react'
+import { installDiffEditorTranslateSelection } from './monaco-translate-selection'
 import type { editor } from 'monaco-editor'
 import { useAppStore } from '@/store'
 import { diffViewStateCache, setWithLRU } from '@/lib/scroll-cache'
@@ -237,6 +238,8 @@ export default function DiffViewer({
       })
       diffEditor.onDidDispose(preserveDiffViewStateAcrossModelSwaps(diffEditor).dispose)
 
+      const cleanupTranslate = installDiffEditorTranslateSelection(diffEditor)
+      modifiedEditor.onDidDispose(cleanupTranslate)
       setupCopy(originalEditor, monaco, filePath, propsRef)
       setupCopy(modifiedEditor, monaco, filePath, propsRef)
       setModifiedEditor(modifiedEditor)

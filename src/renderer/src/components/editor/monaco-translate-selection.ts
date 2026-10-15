@@ -44,3 +44,13 @@ export function installMonacoTranslateSelection(editorInstance: editor.IStandalo
     }
   }
 }
+
+// Diff panes are separate editors that skip the normal input-binding install.
+export function installDiffEditorTranslateSelection(
+  diffEditor: editor.IStandaloneDiffEditor
+): () => void {
+  const installs = [diffEditor.getOriginalEditor(), diffEditor.getModifiedEditor()].map(
+    installMonacoTranslateSelection
+  )
+  return () => installs.forEach((install) => install.dispose())
+}
