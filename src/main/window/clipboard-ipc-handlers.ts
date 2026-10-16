@@ -6,8 +6,8 @@ import {
   type IpcMainInvokeEvent,
   type WebContents
 } from 'electron'
-import { spawn } from 'node:child_process'
 import { open, stat } from 'node:fs/promises'
+import { runProcess } from '@orca/process-host'
 import type { Store } from '../persistence'
 import { PATH_ACCESS_DENIED_MESSAGE } from '../ipc/filesystem-auth'
 import { resolveDesktopAuthorizedPath } from '../ipc/local-file-access-resolution'
@@ -43,7 +43,7 @@ import { readWindowsClipboardImageFileAsPng } from './clipboard-windows-image-fi
 import { readClipboardImageSource } from './clipboard-image-source'
 import { readClipboardCopiedFilePaths } from './clipboard-copied-file-paths'
 import { buildClipboardImageThumbnail } from './clipboard-image-thumbnail'
-import { writeClipboardTextAndVerify } from './clipboard-text-write-verify'
+import { publishClipboardText } from './clipboard-text-publisher'
 import { isDashboardPopoutRenderer } from './dashboard-popout-window'
 import { restoreNativeChatPastes, sweepExpiredNativeChatPastes } from './native-chat-paste-files'
 
@@ -85,19 +85,6 @@ async function saveClipboardImageBufferForTarget(
 
 export function setTrustedClipboardRendererWebContentsId(webContentsId: number | null): void {
   trustedClipboardRendererWebContentsId = webContentsId
-}
-
-// Run a short-lived OS clipboard helper (PowerShell / wl-copy / xclip), feeding
-// it stdin when provided; resolves only on a clean exit.
-function runCommand(command: string, args: string[], stdin?: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { stdio: ['pipe', 'ignore', 'ignore'] })
-    child.on('error', reject)
-    child.on('exit', (code) =>
-      code === 0 ? resolve() : reject(new Error(`${command} exited with ${code}`))
-    )
-    child.stdin?.end(stdin ?? '')
-  })
 }
 
 export function registerClipboardHandlers(store: Store): void {
@@ -204,9 +191,8 @@ export function registerClipboardHandlers(store: Store): void {
   )
   ipcMain.handle('clipboard:writeText', async (event, text: string) => {
     assertTrustedClipboardTextSender(event)
-    const safeText = await assertClipboardTextWriteWithinLimitWithYield(text)
     try {
-      clipboard.writeText(safeText)
+      await publishClipboardText(text, 'ordinary')
     } catch (error) {
       // Native failures can name paths or platform state, so they stay here; the renderer
       // only renders a vetted reason (describeClipboardWriteFailure).
@@ -216,7 +202,7 @@ export function registerClipboardHandlers(store: Store): void {
   })
   ipcMain.handle('clipboard:writeTerminalText', async (event, text: string) => {
     assertTrustedClipboardTextSender(event)
-    return writeClipboardTextAndVerify(await assertClipboardTextWriteWithinLimitWithYield(text))
+    return publishClipboardText(text)
   })
   ipcMain.handle('clipboard:writeSelectionText', async (event, text: string) => {
     assertTrustedClipboardSender(event)
@@ -289,7 +275,7 @@ function makeClipboardFileDeps(
     desktop: process.env.XDG_CURRENT_DESKTOP,
     resolveFilePath,
     writeBuffer: (format, buffer) => clipboard.writeBuffer(format, buffer),
-    runCommand
+    runProcess
   }
 }
 

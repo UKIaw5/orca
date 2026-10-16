@@ -95,7 +95,7 @@ describe('countFocusSettingReads', () => {
     expect(readers.namesFor('src/renderer/src/b.ts').has('ownerTarget')).toBe(false)
     expect(
       countFocusSettingReads(
-        'const t = runtimeTargetForOwnerHostId(getSettingsFocusedExecutionHostId(s))',
+        'const t = ipcOrRuntimeTargetForHostId(getSettingsFocusedExecutionHostId(s))',
         readers.namesFor('src/renderer/src/a.ts')
       )
     ).toBe(1)
@@ -241,5 +241,6 @@ describe('isScannedPath', () => {
     expect(isScannedPath('src/renderer/src/a.tsx')).toBe(true)
     expect(isScannedPath('src/renderer/src/a.test.ts')).toBe(false)
     expect(isScannedPath('src/renderer/src/a.spec.tsx')).toBe(false)
+    expect(isScannedPath('src/renderer/src/a.test-fixture.ts')).toBe(false)
   })
 })
