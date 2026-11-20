@@ -2,14 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { CheckCircle2, Loader2, Lock, Unlink } from 'lucide-react'
 import { toast } from 'sonner'
 import { translate } from '@/i18n/i18n'
-import { useShortcutLabel } from '@/hooks/useShortcutLabel'
+import { useShortcutLabel } from '@/lib/keyboard/useShortcutLabel'
 import type { TranslationKeyStatus } from '../../../../shared/translation/translation-ipc-types'
 import { useAppStore } from '../../store'
-import { isWindowsUserAgent } from '../terminal-pane/pane-helpers'
+import { isWindowsUserAgent } from '@/app-shell/platform/user-agent-platform'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
-import { UnsealedCredentialNotice } from './UnsealedCredentialNotice'
+import { UnsealedCredentialNotice } from '../provider-accounts/UnsealedCredentialNotice'
 
 export function TranslationPane(): React.JSX.Element {
   const shortcutLabel = useShortcutLabel('translate.selection')

@@ -13,10 +13,10 @@ import type {
   TranslationKeyStatus
 } from '../../shared/translation/translation-ipc-types'
 
-function readKeyStatus(): TranslationKeyStatus {
+async function readKeyStatus(): Promise<TranslationKeyStatus> {
   return {
-    configured: hasGoogleTranslateApiKey(),
-    protection: getGoogleTranslateApiKeyProtection()
+    configured: await hasGoogleTranslateApiKey(),
+    protection: await getGoogleTranslateApiKeyProtection()
   }
 }
 
@@ -29,18 +29,23 @@ export function registerTranslationHandlers(): void {
     provider: createGoogleTranslateProvider({ readApiKey: readGoogleTranslateApiKey })
   })
 
-  ipcMain.handle('translation:getApiKeyStatus', (): TranslationKeyStatus => readKeyStatus())
+  ipcMain.handle('translation:getApiKeyStatus', (): Promise<TranslationKeyStatus> =>
+    readKeyStatus()
+  )
 
-  ipcMain.handle('translation:saveApiKey', (_event, apiKey: unknown): TranslationKeyStatus => {
-    if (typeof apiKey !== 'string') {
-      throw new Error('Google Translate API key is required')
+  ipcMain.handle(
+    'translation:saveApiKey',
+    async (_event, apiKey: unknown): Promise<TranslationKeyStatus> => {
+      if (typeof apiKey !== 'string') {
+        throw new Error('Google Translate API key is required')
+      }
+      await saveGoogleTranslateApiKey(apiKey)
+      return readKeyStatus()
     }
-    saveGoogleTranslateApiKey(apiKey)
-    return readKeyStatus()
-  })
+  )
 
-  ipcMain.handle('translation:clearApiKey', (): TranslationKeyStatus => {
-    clearGoogleTranslateApiKey()
+  ipcMain.handle('translation:clearApiKey', async (): Promise<TranslationKeyStatus> => {
+    await clearGoogleTranslateApiKey()
     return readKeyStatus()
   })
 

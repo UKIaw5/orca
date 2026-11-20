@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { getWindowShortcutActionId, resolveWindowShortcutAction } from './window-shortcut-policy'
-import type { WindowShortcutInput } from './window-shortcut-policy'
+import {
+  getWindowShortcutActionId,
+  resolveWindowShortcutAction
+} from './keybindings/window-shortcut-policy'
+import type { WindowShortcutInput } from './keybindings/window-shortcut-policy'
 
 const CHORD: WindowShortcutInput = {
   code: 'KeyT',
