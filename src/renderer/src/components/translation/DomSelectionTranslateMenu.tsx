@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { translate } from '@/i18n/i18n'
-import { isEditableTarget } from '@/lib/editable-target'
+import { isEditableTarget } from '@/lib/text-input/focus/editable-target'
 import { readDomSelectionAtPoint } from './translation-dom-selection'
 import { translateSelectedText } from './translate-selection'
 

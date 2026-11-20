@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { buildEditableContextMenuTemplate } from './editable-context-menu'
+import { buildEditableContextMenuTemplate } from './editing/editable-context-menu'
 
 function build(selectionText: string): Electron.MenuItemConstructorOptions[] {
   return buildEditableContextMenuTemplate(

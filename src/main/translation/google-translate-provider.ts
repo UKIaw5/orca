@@ -29,7 +29,7 @@ export function createGoogleTranslateProvider({
   readApiKey,
   fetchImpl = fetch
 }: {
-  readApiKey: () => string | null
+  readApiKey: () => string | null | Promise<string | null>
   fetchImpl?: FetchLike
 }): TranslationProvider {
   return {
@@ -37,7 +37,7 @@ export function createGoogleTranslateProvider({
     async translate(text, { from, to }) {
       let apiKey: string | null
       try {
-        apiKey = readApiKey()
+        apiKey = await readApiKey()
       } catch {
         // Why: a key sealed by another profile or machine can't be decrypted here; only re-entering it fixes that.
         throw new Error(

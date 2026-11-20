@@ -1,6 +1,6 @@
 import type { Terminal } from '@xterm/xterm'
 import { registerActiveTranslationSelectionSource } from '../translation/translation-selection-source'
-import { readTerminalClipboardSelection } from './terminal-clipboard-selection-text'
+import { readTerminalClipboardSelection } from './clipboard/terminal-clipboard-selection-text'
 
 function readSelectionSafely(terminal: Pick<Terminal, 'getSelection'>): string {
   try {

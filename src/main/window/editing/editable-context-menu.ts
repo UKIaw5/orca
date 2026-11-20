@@ -203,7 +203,7 @@ function buildMarkdownMenuTemplate(
 }
 
 function buildNativeEditMenuTemplate(
-  params: Electron.ContextMenuParams,
+  params: EditableContextMenuParams,
   webContents: EditableContextMenuWebContents
 ): Electron.MenuItemConstructorOptions[] {
   const labels = editableContextMenuLabels()

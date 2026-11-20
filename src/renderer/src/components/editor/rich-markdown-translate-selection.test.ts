@@ -2,8 +2,8 @@
 
 import { describe, expect, it } from 'vitest'
 import { Editor } from '@tiptap/core'
-import { createRichMarkdownExtensions } from './rich-markdown-extensions'
-import { createRichMarkdownEditorCodec } from './rich-markdown-source-transport'
+import { createRichMarkdownExtensions } from './rich-markdown/schema/rich-markdown-extensions'
+import { createRichMarkdownEditorCodec } from './rich-markdown/document/rich-markdown-source-transport'
 import { readRichMarkdownSelectionText } from './rich-markdown-translate-selection'
 
 describe('readRichMarkdownSelectionText', () => {
