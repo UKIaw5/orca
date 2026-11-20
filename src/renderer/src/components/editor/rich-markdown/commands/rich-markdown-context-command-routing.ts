@@ -34,6 +34,11 @@ export function runRichMarkdownContextCommand({
   pickImage: () => void
 }): void {
   const { command } = payload
+  // Why: repositioning the cursor to the click point would collapse the very selection being translated.
+  if (command === 'translate-selection') {
+    void translateSelectedText(readRichMarkdownSelectionText(editor))
+    return
+  }
   if (!command.startsWith('insert-') && !command.startsWith('delete-')) {
     try {
       const clickPosition = editor.view.posAtCoords({ left: payload.x, top: payload.y })?.pos
@@ -104,9 +109,6 @@ export function runRichMarkdownContextCommand({
       return
     case 'divider':
       editor.chain().focus().setHorizontalRule().run()
-      return
-    case 'translate-selection':
-      void translateSelectedText(readRichMarkdownSelectionText(editor))
       return
     case 'insert-row-above':
     case 'insert-row-below':
